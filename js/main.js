@@ -1,5 +1,20 @@
 var localdebug = true;
+//var localdebug = false;
 var dummy = [
+	{
+		name: "むろらん雪まつり",
+		img: "http://www.kujiran.net/danpara/danparapark10.gif",
+		lat: 42.4116113,
+		lng: 140.9988941,
+		desc: "だんパラスキー場を会場に、市民スキー大会、スノーボード、スキー教室の他、ご家族そろって楽しめる多彩な催しが満載です。"
+	},
+	{
+		name: "白鳥大橋ビューポイント",
+		img: "http://www.city.muroran.lg.jp/main/org6400/images/yakei-hakutyouwan.jpg",
+		lat: 42.362751,
+		lng: 141.000106,
+		desc: "白鳥大橋のビューポイント。橋を西に望む住宅街にある小さな展望広場。夕日が美しく、大黒島が橋の桁下中央に入る景観美。"
+	},
 	{
 		name: "中島公園",
 		lat: 42.353396,
@@ -128,10 +143,11 @@ var getNearCulturalPropertyWithGeo = function(lat, lng, size, callback) {
 	q = q.replace(/\$LAT_MIN\$/g, latmin);
 	q = q.replace(/\$LNG_MAX\$/g, lngmax);
 	q = q.replace(/\$LNG_MIN\$/g, lngmin);
-	
+		
 	if (localdebug) {
 		callback(dummy);
 	} else {
+//		prompt(q);
 		var baseurl = "https://sparql.odp.jig.jp/data/sparql";
 		querySPARQL(baseurl, q, function(data) {
 			callback(toList(data));
