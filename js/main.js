@@ -1,5 +1,5 @@
 var localdebug = true;
-//var localdebug = false;
+var localdebug = false;
 var dummy = [
 	{
 		name: "むろらん雪まつり",
@@ -128,6 +128,7 @@ var getNearCulturalPropertyWithGeo = function(lat, lng, size, callback) {
 	var q = f2s(function() {/*
 		prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+		prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 		select ?name ?desc ?url ?img ?lat ?lng {
 			?s <http://schema.org/image> ?img;
 				rdfs:label ?name;
@@ -135,10 +136,12 @@ var getNearCulturalPropertyWithGeo = function(lat, lng, size, callback) {
 				geo:long ?lng.
 			optional { ?s <http://schema.org/description> ?desc }
 			optional { ?s <http://schema.org/url> ?link }
+			filter(lang(?name)="$LANG$")
 			filter(xsd:float(?lat) < $LAT_MAX$ && xsd:float(?lat) > $LAT_MIN$ && xsd:float(?lng) < $LNG_MAX$ && xsd:float(?lng) > $LAT_MIN$)
 		} order by rand() limit $SIZE$
 	*/});
 	q = q.replace(/\$SIZE\$/g, size);
+	q = q.replace(/\$LANG\$/g, "ja");
 	q = q.replace(/\$LAT_MAX\$/g, latmax);
 	q = q.replace(/\$LAT_MIN\$/g, latmin);
 	q = q.replace(/\$LNG_MAX\$/g, lngmax);
@@ -178,6 +181,14 @@ var showItems = function(lat, lng) {
 	clear("items");
 	getNearCulturalPropertyWithGeo(lat, lng, 12, function(data) {
 		//		dump(data);
+		var getDistance = function(d) {
+			var dlat = lat - d.lat;
+			var dlng = lng - d.lng;
+			return Math.sqrt(dlat * dlat + dlng * dlng);
+		};
+		data.sort(function(a, b) {
+			return getDistance(a) - getDistance(b);
+		});
 		for (var i = 0; i < data.length; i++) {
 			var d = data[i];
 			addItemSpot(d, lat, lng);
