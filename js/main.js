@@ -58,7 +58,7 @@ var getCulturalPropertyWithGeo = function(size, callback) {
 	*/});
 	q = q.replace(/\$SIZE\$/g, size);
 	
-	var baseurl = "http://sparql.odp.jig.jp/data/sparql";
+	var baseurl = "https://sparql.odp.jig.jp/data/sparql";
 	querySPARQL(baseurl, q, function(data) {
 		callback(toList(data));
 	});
