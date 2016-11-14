@@ -39,12 +39,12 @@ var addItem = function(s, img, list) {
 	var div = create("div");
 	div.className = "collapsible-header";
 	li.appendChild(div);
+	var span2 = create("span");
+	span2.className = "icon";
+	div.appendChild(span2);
 	var span = create("span");
 	span.className = "days";
 	div.appendChild(span);
-	var span2 = create("span");
-	span2.className = "gcal";
-	div.appendChild(span2);
 	get("items").appendChild(li);
 	
 	span.textContent = s;
@@ -57,11 +57,7 @@ var addItem = function(s, img, list) {
 			img.style = "width: 5rem; height: 5rem;";
 			span2.appendChild(img);
 			*/
-			span2.style = "text-align: center; line-height: 10rem; display: block; float: right; margin-top: 2.5rem; width: 5rem; height: 5rem;";
-			//		span2.style.backgroundImage = "url(img/image.png)";
 			span2.style.backgroundImage = "url(" + img + ")";
-			span2.style.backgroundSize = "auto 5rem";
-			span2.style.backgroundPosition = "center center";
 		}
 	} else {
 		span2.innerHTML = "<i class=material-icons>broken_image</i>";
@@ -85,7 +81,7 @@ var getLinkDirections = function(lat1, lng1, lat2, lng2) {
 };
 
 var getStaticMap = function(lat, lng, lat2, lng2) {
-	var s = "http://maps.googleapis.com/maps/api/staticmap?";
+	var s = "https://maps.googleapis.com/maps/api/staticmap?";
 	s +="size=600x300&maptype=roadmap&";
 	s += "markers=color:red%7Clabel:P%7C" + lat + "," + lng + "&"
 	s += "markers=color:blue%7Clabel:D%7C" + lat2 + "," + lng2 + "&";
