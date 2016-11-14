@@ -81,8 +81,10 @@ var getLinkDirections = function(lat1, lng1, lat2, lng2) {
 };
 
 var getStaticMap = function(lat, lng, lat2, lng2) {
+	var APIKEY = "AIzaSyCQZtmjVkn8wWuojY1PL96W5yg7u4uMs0k";
 	var s = "https://maps.googleapis.com/maps/api/staticmap?";
-	s +="size=600x300&maptype=roadmap&";
+	s += "apikey=" + APIKEY + "&";
+	s += "size=600x300&maptype=roadmap&";
 	s += "markers=color:red%7Clabel:P%7C" + lat + "," + lng + "&"
 	s += "markers=color:blue%7Clabel:D%7C" + lat2 + "," + lng2 + "&";
 	s += "sensor=false";
