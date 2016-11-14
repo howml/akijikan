@@ -118,6 +118,8 @@ var getCulturalPropertyWithGeo = function(size, callback) {
 };
 var getNearCulturalPropertyWithGeo = function(lat, lng, size, callback) {
 	var dll = 0.1;
+	lat = parseFloat(lat);
+	lng = parseFloat(lng);
 	var latmin = lat - dll;
 	var latmax = lat + dll;
 	var lngmin = lng - dll;
@@ -209,6 +211,13 @@ var addItemSpot = function(d, lat, lng) {
 
 
 $(function() {
+	var hash = document.location.hash;
+	if (hash.length > 1) {
+		var pos = hash.substring(1).split(",");
+		showItems(pos[0], pos[1]);
+		return;
+	}
+	
 	addItem("現在位置取得中...", "noimage");
 	
 	/*
