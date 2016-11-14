@@ -1,3 +1,6 @@
+var viewlen = 20;
+var maxlen = 50;
+
 var localdebug = true;
 var localdebug = false;
 var dummy = [
@@ -31,7 +34,7 @@ var dummy = [
 	},
 ];
 
-var addItem = function(s, img, list) {
+var addItem = function(s, img, list, distance, icon) {
 	/*
 	<li id="day0"><div class="collapsible-header"><span class="days"></span><span class="gcal"></span></div></li>
 	*/
@@ -39,18 +42,12 @@ var addItem = function(s, img, list) {
 	var div = create("div");
 	div.className = "collapsible-header";
 	li.appendChild(div);
-	var span2 = create("span");
-	span2.className = "icon";
-	div.appendChild(span2);
-	var span = create("span");
-	span.className = "days";
-	div.appendChild(span);
-	get("items").appendChild(li);
-	
-	span.textContent = s;
 	
 	if (img) {
 		if (img != "noimage") {
+			var span2 = create("span");
+			span2.className = "icon";
+			div.appendChild(span2);
 			/*
 			var img = new Image();
 			img.src = "img/image.png";
@@ -60,7 +57,25 @@ var addItem = function(s, img, list) {
 			span2.style.backgroundImage = "url(" + img + ")";
 		}
 	} else {
-		span2.innerHTML = "<i class=material-icons>broken_image</i>";
+		var span2 = create("span");
+		span2.className = "icon";
+		div.appendChild(span2);
+		span2.className = "materialicon";
+		if (!icon)
+			icon = "broken_image";// warning
+		//		span2.innerHTML = "<i class=material-icons>broken_image</i>";
+		span2.innerHTML = "<i class=material-icons>" + icon + "</i>";
+	}
+	var span = create("span");
+	span.className = "days";
+	div.appendChild(span);
+	span.textContent = s;
+	
+	if (distance) {
+		var span3 = create("span");
+		span3.className = "distance";
+		span.appendChild(span3);
+		span3.textContent = fixfloat(distance, 2) + "km";
 	}
 	
 	if (list) {
@@ -75,6 +90,8 @@ var addItem = function(s, img, list) {
 			}
 		}
 	}
+	get("items").appendChild(li);
+	return li;
 };
 var getLinkDirections = function(lat1, lng1, lat2, lng2) {
 	return "https://www.google.com/maps/dir/" + lat1 + "," + lng1 + "/" + lat2 + "," + lng2;
@@ -116,7 +133,20 @@ var getCulturalPropertyWithGeo = function(size, callback) {
 		callback(toList(data));
 	});
 };
-var getNearCulturalPropertyWithGeo = function(lat, lng, size, callback) {
+var getDataSrc = function(type) {
+	if (type == "http://purl.org/jrrk#CivicPOI")
+		return "観光オープンデータ";
+	if (type == "http://odp.jig.jp/odp/1.0#TourSpot")
+		return "公共クラウド観光データ";
+	if (type == "http://purl.org/jrrk#EmergencyFacility")
+		return "避難所";
+	return type;
+};
+var getNearWithGeo = function(lat, lng, size, callback) {
+	// type
+	// http://purl.org/jrrk#CivicPOI
+	// http://odp.jig.jp/odp/1.0#TourSpot
+	// http://purl.org/jrrk#EmergencyFacility
 	var dll = 0.1;
 	lat = parseFloat(lat);
 	lng = parseFloat(lng);
@@ -127,20 +157,31 @@ var getNearCulturalPropertyWithGeo = function(lat, lng, size, callback) {
 
 	var q = f2s(function() {/*
 		prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+		prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-		select ?name ?desc ?url ?img ?lat ?lng {
-			?s <http://schema.org/image> ?img;
+		select ?name ?desc ?url ?img ?lat ?lng ?type {
+			?s rdf:type ?type;
 				rdfs:label ?name;
 				geo:lat ?lat;
 				geo:long ?lng.
+			optional { ?s <http://schema.org/image> ?img }
 			optional { ?s <http://schema.org/description> ?desc }
 			optional { ?s <http://schema.org/url> ?link }
+			filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot> || ?type=<http://purl.org/jrrk#CivicPOI> || ?type=<http://purl.org/jrrk#EmergencyFacility>)
 			filter(lang(?name)="$LANG$")
+			filter(lang(?desc)="$LANG$")
 			filter(xsd:float(?lat) < $LAT_MAX$ && xsd:float(?lat) > $LAT_MIN$ && xsd:float(?lng) < $LNG_MAX$ && xsd:float(?lng) > $LAT_MIN$)
 		} order by rand() limit $SIZE$
 	*/});
+	/*
+	filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot>)
+	filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot> || ?type=<http://purl.org/jrrk#CivicPOI>)
+	
+	filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot> || ?type=<http://purl.org/jrrk#CivicPOI> || ?type=<http://purl.org/jrrk#EmergencyFacility>)
+	*/
 	q = q.replace(/\$SIZE\$/g, size);
+//	q = q.replace(/\$TYPE\$/g, type);
 	q = q.replace(/\$LANG\$/g, "ja");
 	q = q.replace(/\$LAT_MAX\$/g, latmax);
 	q = q.replace(/\$LAT_MIN\$/g, latmin);
@@ -176,23 +217,74 @@ var cantPos = function() {
 	alert("位置情報が取得できないので、現在位置を室蘭駅と仮定します");
 	showItems(defpos[0], defpos[1]);
 };
-
+var getDistance = function(lat1, lng1, lat2, lng2) {
+	var dlat = (lat2 - lat1) * Math.PI / 180;
+	var dlng = (lng2 - lng1) * Math.PI / 180;
+	var a = Math.sin(dlat / 2) * Math.sin(dlat / 2)
+		+ Math.cos(lat1 * Math.PI / 180)
+		* Math.cos(lat2 * Math.PI / 180)
+		* Math.sin(dlng / 2) * Math.sin(dlng / 2);
+	return 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 6371; // 6371 = R of the Earth in km
+};
+// material icon
+// report, new_releases, explicit, error, error_outline, warning, announcement
 var showItems = function(lat, lng) {
 	clear("items");
-	getNearCulturalPropertyWithGeo(lat, lng, 12, function(data) {
+	getNearWithGeo(lat, lng, maxlen, function(data) {
 		//		dump(data);
-		var getDistance = function(d) {
-			var dlat = lat - d.lat;
-			var dlng = lng - d.lng;
-			return Math.sqrt(dlat * dlat + dlng * dlng);
-		};
-		data.sort(function(a, b) {
-			return getDistance(a) - getDistance(b);
-		});
+		var names = {};
 		for (var i = 0; i < data.length; i++) {
 			var d = data[i];
-			addItemSpot(d, lat, lng);
+			var name = d.name; //.trim();
+			var dp = names[name];
+			if (dp) {
+				if (dp.img == null && d.img) {
+					names[name] = d;
+				}
+			} else {
+				names[name] = d;
+			}
 		}
+		data = [];
+		for (var n in names) {
+			data.push(names[n]);
+		}
+		
+		for (var i = 0; i < data.length; i++) {
+			var d = data[i];
+			d.distance = getDistance(lat, lng, d.lat, d.lng);
+		}
+		data.sort(function(a, b) {
+			return a.distance - b.distance;
+		});
+		var n = 0;
+		for (var i = 0; i < data.length; i++) {
+			var d = data[i];
+			var item = addItemSpot(d, lat, lng);
+			item.data = d;
+			if (d.type == "http://purl.org/jrrk#EmergencyFacility" || n >= viewlen) {
+				item.style.display = "none";
+			} else {
+				n++;
+			}
+		}
+		var emergencymode = false;
+		get("flip").onclick = function() {
+			emergencymode = !emergencymode;
+			var cs = get("items").children;
+			var n = 0;
+			for (var i = 0; i < cs.length; i++) {
+				var item = cs[i];
+				var d = item.data;
+				var b = d.type == "http://purl.org/jrrk#EmergencyFacility";
+				if (b == emergencymode && n < viewlen) {
+					n++;
+					item.style.display =  "block";
+				} else {
+					item.style.display =  "none";
+				}
+			}
+		};
 	});
 };
 var getImageLink = function(img) {
@@ -201,14 +293,17 @@ var getImageLink = function(img) {
 	return "<a href=" + img + " target=_blank><img width=100% src=" + img + "></a>";
 };
 var addItemSpot = function(d, lat, lng) {
-	addItem(d.name.substring(0, 6), d.img, [
+	var icon = null;
+	if (d.type == "http://purl.org/jrrk#EmergencyFacility")
+		icon = "warning";
+	return addItem(d.name.substring(0, 6), d.img, [
 		d.name,
 		getImageLink(d.img),
 		d.desc,
-		getHTMLMap(lat, lng, d.lat, d.lng)
-	], lat, lng);
+		getHTMLMap(lat, lng, d.lat, d.lng),
+		getDataSrc(d.type),
+	], d.distance, icon);
 };
-
 
 $(function() {
 	var hash = document.location.hash;

@@ -23,7 +23,7 @@
 .collapsible-header i {
     color:#00BFA5;
     font-size: 5rem;
-    line-height: 10rem;
+    line-height: 8rem;
     display: block;
     float: right;
     text-align: center;
@@ -52,4 +52,12 @@
 	height: 5rem;";
 	background-size: auto 5rem;
 	background-position: center center;
+}
+.distance {
+	display: block;
+	position: relative;
+	line-height: 1rem;
+	font-size: 1rem;
+	top: -3rem;
+	left: 0.3rem;
 }
