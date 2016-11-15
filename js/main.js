@@ -52,6 +52,9 @@ var addItem = function(s, img, list, distance, icon) {
 	div.className = "collapsible-header";
 	li.appendChild(div);
 	
+	if (img && img.indexOf("https://"))
+		img = null;
+	
 	if (img) {
 		if (img != "noimage") {
 			var span2 = create("span");
