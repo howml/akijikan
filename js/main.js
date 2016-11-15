@@ -57,14 +57,15 @@ var addItem = function(s, img, list, distance, icon) {
 			var span2 = create("span");
 			span2.className = "icon";
 			div.appendChild(span2);
-			/*
-			var img = new Image();
-			img.src = "img/image.png";
-			img.style = "width: 5rem; height: 5rem;";
-			span2.appendChild(img);
-			*/
 			span2.style.backgroundImage = "url(" + img + ")";
 		}
+	} else if (icon == "warning") {
+		var img = "img/icon_emergency2.png";
+		var span2 = create("span");
+		span2.className = "icon";
+		div.appendChild(span2);
+		span2.style.backgroundImage = "url(" + img + ")";
+//		span2.style.backgroundSize = "100%";
 	} else {
 		var span2 = create("span");
 		span2.className = "icon";
