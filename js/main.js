@@ -52,7 +52,7 @@ var addItem = function(s, img, list, distance, icon) {
 	div.className = "collapsible-header";
 	li.appendChild(div);
 	
-	if (img && img.indexOf("https://"))
+	if (img && img != "noimage" && img.indexOf("https://"))
 		img = null;
 	
 	if (img) {
@@ -402,7 +402,7 @@ $(function() {
 		return;
 	}
 	
-	addItem("現在位置取得中...", "noimage");
+	addItem("付近のデータ取得中...", "noimage");
 	
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
