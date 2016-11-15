@@ -19,6 +19,7 @@
 .collapsible-header .days {
 	font-size: 2.1rem;
 	white-space: nowrap;
+	overflow: hidden;
 }
 .collapsible-body {
     display: none;
