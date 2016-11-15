@@ -1,4 +1,3 @@
-
 .collapsible{
 	box-shadow:none;
 }
@@ -60,4 +59,15 @@
 	font-size: 1rem;
 	top: -3rem;
 	left: 0.3rem;
+}
+.emergency_icon {
+	float: right;
+	height: 3.5rem;
+	margin-top: 0.5rem;
+}
+@media only screen and (min-width: 993px) {
+	.emergency_icon {
+	    margin-right: 12rem;
+		margin-top: 2.5rem;
+	}
 }
