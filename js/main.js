@@ -378,7 +378,16 @@ var addItemSpot = function(d, lat, lng) {
 	], d.distance, icon);
 };
 
+//localStorage.setItem("akijikan-init", "0");
 $(function() {
+	if ("1" != localStorage.getItem("akijikan-init")) {
+		get("splash").style.display = "block";
+		get("splash").onclick = function() {
+			get("splash").style.display = "none";
+			localStorage.setItem("akijikan-init", "1");
+		};
+	}
+	
 	var hash = document.location.hash;
 	if (hash.length > 1) {
 		var pos = hash.substring(1).split(",");
