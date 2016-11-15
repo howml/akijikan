@@ -198,11 +198,23 @@ var getNearTypesWithGeoMulti = function(types, lat, lng, dll, size, callback) {
 				return;
 			}
 //			alert("/2 " + d.length + "<" + size);
-			getNearTypesWithGeo(types, lat, lng, dll, size * 2, callback);
+			getNearTypesWithGeo(types, lat, lng, dll, size * 2, function(d) {
+				if (d.length > 0) {
+					callback(d);
+					return;
+				}
+				getNearTypesWithGeo(types, lat, lng, dll * 10, size, function(d) {
+					if (d.length > 0) {
+						callback(d);
+						return;
+					}
+					getNearTypesWithGeo(types, lat, lng, dll * 100, size, callback);
+				});
+			});
 		});
 	});
 };
-var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback) {
+var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) {
 	lat = parseFloat(lat);
 	lng = parseFloat(lng);
 	var latmin = lat - dll;
@@ -229,7 +241,7 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback) {
 			$FILTER$
 			filter(lang(?name)="$LANG$")
 			filter(xsd:float(?lat) < $LAT_MAX$ && xsd:float(?lat) > $LAT_MIN$ && xsd:float(?lng) < $LNG_MAX$ && xsd:float(?lng) > $LAT_MIN$)
-		} order by rand() limit $SIZE$
+		} $ORDER$ limit $SIZE$
 	*/});
 	/*
 	filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot>)
@@ -238,6 +250,11 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback) {
 	filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot> || ?type=<http://purl.org/jrrk#CivicPOI> || ?type=<http://purl.org/jrrk#EmergencyFacility>)
 	*/
 	
+//	if (!order)
+//		order = "order by rand()";
+	if (!order)
+		order = "";
+	q = q.replace(/\$ORDER\$/g, order);
 	q = q.replace(/\$SIZE\$/g, size);
 //	q = q.replace(/\$TYPE\$/g, type);
 	q = q.replace(/\$LANG\$/g, "ja");
