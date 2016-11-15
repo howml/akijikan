@@ -1,8 +1,17 @@
+//var defpos = [ 42.31804, 140.97418, "室蘭駅" ];
+var defpos = [ 42.108813, 140.573886, "森町駅" ];
+//var defpos = [ 35.943406, 136.188597, "鯖江駅" ];
 var viewlen = 20;
-var maxlen = 50;
+var maxlen = 30;
+var dllpoi = 0.1;
+var dllemr = 0.01;
+
+var gpson = true;
+//var gpson = false;
 
 var localdebug = true;
 var localdebug = false;
+
 var dummy = [
 	{
 		name: "むろらん雪まつり",
@@ -96,7 +105,6 @@ var addItem = function(s, img, list, distance, icon) {
 var getLinkDirections = function(lat1, lng1, lat2, lng2) {
 	return "https://www.google.com/maps/dir/" + lat1 + "," + lng1 + "/" + lat2 + "," + lng2;
 };
-
 var getStaticMap = function(lat, lng, lat2, lng2) {
 	var APIKEY = "AIzaSyCQZtmjVkn8wWuojY1PL96W5yg7u4uMs0k";
 	var s = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -147,7 +155,49 @@ var getNearWithGeo = function(lat, lng, size, callback) {
 	// http://purl.org/jrrk#CivicPOI
 	// http://odp.jig.jp/odp/1.0#TourSpot
 	// http://purl.org/jrrk#EmergencyFacility
-	var dll = 0.1;
+	var typepoi = [
+		"http://purl.org/jrrk#CivicPOI",
+		"http://odp.jig.jp/odp/1.0#TourSpot"
+	];
+	var typeemergency = [
+		"http://purl.org/jrrk#EmergencyFacility"
+	];
+	/*
+	getNearTypesWithGeoMulti(typeemergency, lat, lng, dllemr, 10, function(emrs) {
+	});
+	return;
+	*/
+	getNearTypesWithGeoMulti(typepoi, lat, lng, dllpoi, size, function(pois) {
+		getNearTypesWithGeoMulti(typeemergency, lat, lng, dllemr, 10, function(emrs) {
+			
+//			dump(emrs);
+			var data = [];
+			for (var i = 0; i < pois.length; i++)
+				data.push(pois[i]);
+			for (var i = 0; i < emrs.length; i++)
+				data.push(emrs[i]);
+			callback(data);
+		});
+	});
+};
+var getNearTypesWithGeoMulti = function(types, lat, lng, dll, size, callback) {
+	getNearTypesWithGeo(types, lat, lng, dll / 10, size * 2, function(d) {
+		if (d.length >= size) {
+			callback(d);
+			return;
+		}
+//		alert("/10 " + d.length + "<" + size);
+		getNearTypesWithGeo(types, lat, lng, dll / 3, size * 2, function(d) {
+			if (d.length >= size / 2) {
+				callback(d);
+				return;
+			}
+//			alert("/2 " + d.length + "<" + size);
+			getNearTypesWithGeo(types, lat, lng, dll, size * 2, callback);
+		});
+	});
+};
+var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback) {
 	lat = parseFloat(lat);
 	lng = parseFloat(lng);
 	var latmin = lat - dll;
@@ -166,11 +216,13 @@ var getNearWithGeo = function(lat, lng, size, callback) {
 				geo:lat ?lat;
 				geo:long ?lng.
 			optional { ?s <http://schema.org/image> ?img }
-			optional { ?s <http://schema.org/description> ?desc }
+			optional {
+				?s <http://schema.org/description> ?desc.
+				filter(lang(?desc)="$LANG$")
+			}
 			optional { ?s <http://schema.org/url> ?link }
-			filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot> || ?type=<http://purl.org/jrrk#CivicPOI> || ?type=<http://purl.org/jrrk#EmergencyFacility>)
+			$FILTER$
 			filter(lang(?name)="$LANG$")
-			filter(lang(?desc)="$LANG$")
 			filter(xsd:float(?lat) < $LAT_MAX$ && xsd:float(?lat) > $LAT_MIN$ && xsd:float(?lng) < $LNG_MAX$ && xsd:float(?lng) > $LAT_MIN$)
 		} order by rand() limit $SIZE$
 	*/});
@@ -180,6 +232,7 @@ var getNearWithGeo = function(lat, lng, size, callback) {
 	
 	filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot> || ?type=<http://purl.org/jrrk#CivicPOI> || ?type=<http://purl.org/jrrk#EmergencyFacility>)
 	*/
+	
 	q = q.replace(/\$SIZE\$/g, size);
 //	q = q.replace(/\$TYPE\$/g, type);
 	q = q.replace(/\$LANG\$/g, "ja");
@@ -188,6 +241,14 @@ var getNearWithGeo = function(lat, lng, size, callback) {
 	q = q.replace(/\$LNG_MAX\$/g, lngmax);
 	q = q.replace(/\$LNG_MIN\$/g, lngmin);
 		
+	var ts = [];
+	for (var i = 0; i < types.length; i++)
+		ts[i] = "?type=<" + types[i] + ">";
+	var filter = "filter(" + ts.join(" || ") + ")\n";
+	q = q.replace(/\$FILTER\$/g, filter);
+	
+//	prompt(q);
+	
 	if (localdebug) {
 		callback(dummy);
 	} else {
@@ -212,9 +273,8 @@ var toList = function(data) {
 	return list;
 };
 
-var defpos = [ 42.31804, 140.97418 ];
-var cantPos = function() {
-	alert("位置情報が取得できないので、現在位置を室蘭駅と仮定します");
+var ignoreGPS = function() {
+	alert("位置情報が取得できないので、現在位置を" + defpos[2] + "と仮定します");
 	showItems(defpos[0], defpos[1]);
 };
 var getDistance = function(lat1, lng1, lat2, lng2) {
@@ -229,8 +289,8 @@ var getDistance = function(lat1, lng1, lat2, lng2) {
 // material icon
 // report, new_releases, explicit, error, error_outline, warning, announcement
 var showItems = function(lat, lng) {
-	clear("items");
 	getNearWithGeo(lat, lng, maxlen, function(data) {
+		clear("items");
 		//		dump(data);
 		var names = {};
 		for (var i = 0; i < data.length; i++) {
@@ -268,6 +328,9 @@ var showItems = function(lat, lng) {
 				n++;
 			}
 		}
+		if (n == 0) {
+			alert("近く観光オープンデータがないようです");
+		}
 		var emergencymode = false;
 		get("flip").onclick = function() {
 			emergencymode = !emergencymode;
@@ -276,12 +339,21 @@ var showItems = function(lat, lng) {
 			for (var i = 0; i < cs.length; i++) {
 				var item = cs[i];
 				var d = item.data;
-				var b = d.type == "http://purl.org/jrrk#EmergencyFacility";
-				if (b == emergencymode && n < viewlen) {
-					n++;
-					item.style.display =  "block";
+				if (d) {
+					var b = d.type == "http://purl.org/jrrk#EmergencyFacility";
+					if (b == emergencymode && n < viewlen) {
+						n++;
+						item.style.display =  "block";
+					} else {
+						item.style.display =  "none";
+					}
+				}
+			}
+			if (n == 0) {
+				if (emergencymode) {
+					alert("近く避難所オープンデータがないようです");
 				} else {
-					item.style.display =  "none";
+					alert("近く観光オープンデータがないようです");
 				}
 			}
 		};
@@ -312,18 +384,12 @@ $(function() {
 		showItems(pos[0], pos[1]);
 		return;
 	}
+	if (!gpson) {
+		ignoreGPS();
+		return;
+	}
 	
 	addItem("現在位置取得中...", "noimage");
-	
-	/*
-	addItemSpot({
-		name: "西山公園",
-		lat: 35,
-		lng: 135,
-		desc: "せつめい"
-	}, defpos[0], defpos[1]);
-	return;
-	*/
 	
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
@@ -335,7 +401,7 @@ $(function() {
 			function(err) {
 				var errmes = [ "", "許可されてません", "判定できません", "タイムアウト" ];
 				console.log(errmes[err]);
-				cantPos();
+				ignoreGPS();
 			},
 			{
 				enableHighAccuracy: true,
@@ -344,6 +410,6 @@ $(function() {
 			}
 		);
 	} else {
-		cantPos();
+		ignoreGPS();
 	}
 });
