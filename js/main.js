@@ -52,8 +52,10 @@ var addItem = function(s, img, list, distance, icon) {
 	div.className = "collapsible-header";
 	li.appendChild(div);
 	
-	if (img && img != "noimage" && img.indexOf("https://"))
+	if (img && img != "noimage" && img.indexOf("https://") == -1) {
 		img = null;
+	}
+//	icon = "warning";
 	
 	if (img) {
 		if (img != "noimage") {
@@ -113,9 +115,9 @@ var getStaticMap = function(lat, lng, lat2, lng2) {
 	var APIKEY = "AIzaSyCQZtmjVkn8wWuojY1PL96W5yg7u4uMs0k";
 	var s = "https://maps.googleapis.com/maps/api/staticmap?";
 	s += "key=" + APIKEY + "&";
-	s += "size=600x300&maptype=roadmap&";
-	s += "markers=color:red%7Clabel:P%7C" + lat + "," + lng + "&"
-	s += "markers=color:blue%7Clabel:D%7C" + lat2 + "," + lng2 + "&";
+	s += "size=600x300&scale=2&maptype=roadmap&";
+	s += "markers=color:blue%7Clabel:P%7C" + lat + "," + lng + "&"
+	s += "markers=color:red%7Clabel:D%7C" + lat2 + "," + lng2 + "&";
 	s += "sensor=false";
 	return "<img width=100% src='" + s + "'>";
 };

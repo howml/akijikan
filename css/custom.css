@@ -40,10 +40,13 @@
 	line-height: 8rem;
 	display: block;
 	right: 0rem;
-	border: 2rem white solid;
-	border-left: 1rem;
 	margin-top: 0rem;
-	width: 8rem;
+	background-color: white;
+	border-top: 2rem white solid;
+	border-left: 1rem white solid;
+	border-right: 1rem white solid;
+	border-bottom: 2rem white solid;
+	width: 7rem;
 	height: 9rem;
 	background-size: auto 100%;
 	background-position: center center;
@@ -56,9 +59,11 @@
 	position: absolute;
 	right: -1rem;
 	background-color: white;
-	border: 2rem white solid;
-	border-left: 1rem;
-	width: 8rem;
+	border-top: 2rem white solid;
+	border-left: 1rem white solid;
+	border-right: 1rem white solid;
+	border-bottom: 2rem white solid;
+	width: 7rem;
 	height: 9rem;
     text-align: center;
 }
@@ -67,13 +72,13 @@
 	position: relative;
 	line-height: 1rem;
 	font-size: 1rem;
-	top: -3rem;
+	top: -2.7rem;
 	left: 0.3rem;
 }
 .emergency_icon {
 	float: right;
-	height: 3.5rem;
-	margin-top: 0.5rem;
+	height: 2.5rem;
+	margin-top: 1rem;
 }
 #splash {
 	display: none;
