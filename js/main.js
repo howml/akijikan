@@ -447,7 +447,7 @@ var loadItem = function() {
 			{
 				enableHighAccuracy: true,
 				timeout: 10000, // タイムアウト10秒
-				maximumAge: 10000 // 10秒前のデータを使う
+				maximumAge: 0 // nmsec前のデータを使う、0でキャッシュしない
 			}
 		);
 	} else {
