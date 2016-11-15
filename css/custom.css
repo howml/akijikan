@@ -15,11 +15,11 @@
     line-height: 8rem;
     padding: 0 2rem 0 2rem;
     border-bottom: 1px solid #ddd;
+	overflow: hidden;
 }
 .collapsible-header .days {
 	font-size: 2.1rem;
 	white-space: nowrap;
-	overflow: hidden;
 }
 .collapsible-body {
     display: none;
