@@ -55,7 +55,6 @@ var addItem = function(s, img, list, distance, icon) {
 	if (img && img != "noimage" && img.indexOf("https://") == -1) {
 		img = null;
 	}
-//	icon = "warning";
 	
 	if (img) {
 		if (img != "noimage") {
