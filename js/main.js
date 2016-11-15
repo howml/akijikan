@@ -402,7 +402,11 @@ $(function() {
 		ignoreGPS();
 		return;
 	}
-	
+	load();
+	get("logo-container").onclick = load;
+};
+var load = function() {
+	clear("main");
 	addItem("付近のデータ取得中...", "noimage");
 	
 	if (navigator.geolocation) {
