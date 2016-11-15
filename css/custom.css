@@ -34,6 +34,10 @@
 	-moz-box-shadow:0px 9px 12px -9px #383838 inset;
 	-webkit-box-shadow:0px 9px 12px -9px #383838 inset;
 }
+.collapsible-body i {
+	vertical-align: middle;
+	padding-bottom: 5px;
+}
 .icon {
 	position: absolute;
 	text-align: center;

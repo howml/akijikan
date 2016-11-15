@@ -227,7 +227,8 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 		prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-		select ?s ?name ?desc ?url ?img ?lat ?lng ?type {
+		prefix schema: <http://schema.org/>
+		select ?s ?name ?desc ?link ?img ?lat ?lng ?type {
 			?s rdf:type ?type;
 				rdfs:label ?name;
 				geo:lat ?lat;
@@ -250,10 +251,10 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 	filter(?type=<http://odp.jig.jp/odp/1.0#TourSpot> || ?type=<http://purl.org/jrrk#CivicPOI> || ?type=<http://purl.org/jrrk#EmergencyFacility>)
 	*/
 	
-//	if (!order)
-//		order = "order by rand()";
 	if (!order)
-		order = "";
+		order = "order by rand()";
+//	if (!order)
+//		order = "";
 	q = q.replace(/\$ORDER\$/g, order);
 	q = q.replace(/\$SIZE\$/g, size);
 //	q = q.replace(/\$TYPE\$/g, type);
@@ -387,6 +388,8 @@ var getImageLink = function(img) {
 	return "<a href=" + img + " target=_blank><img width=100% src=" + img + "></a>";
 };
 var getLink = function(label, url) {
+	if (!url)
+		return label;
 	return "<a href='" + url + "' target=_blank>" + label + "</a>";
 };
 var addItemSpot = function(d, lat, lng) {
@@ -394,7 +397,7 @@ var addItemSpot = function(d, lat, lng) {
 	if (d.type == "http://purl.org/jrrk#EmergencyFacility")
 		icon = "warning";
 	return addItem(d.name/*.substring(0, 6)*/, d.img, [
-		d.name,
+		getLink(d.name + (d.link ? '<i class="material-icons">home</i>' : ""), d.link),
 		getImageLink(d.img),
 		d.desc,
 		getHTMLMap(lat, lng, d.lat, d.lng),
