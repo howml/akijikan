@@ -227,7 +227,7 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 		prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-		select ?name ?desc ?url ?img ?lat ?lng ?type {
+		select ?s ?name ?desc ?url ?img ?lat ?lng ?type {
 			?s rdf:type ?type;
 				rdfs:label ?name;
 				geo:lat ?lat;
@@ -296,7 +296,7 @@ var toList = function(data) {
 };
 
 var ignoreGPS = function() {
-	alert("位置情報が取得できないので、現在位置を" + defpos[2] + "と仮定します");
+	alert("位置が取得できません。\n" + defpos[2] + "にいるとして調べます");
 	showItems(defpos[0], defpos[1]);
 };
 var getDistance = function(lat1, lng1, lat2, lng2) {
@@ -351,7 +351,7 @@ var showItems = function(lat, lng) {
 			}
 		}
 		if (n == 0) {
-			alert("近く観光オープンデータがないようです");
+			alert("近くに観光オープンデータがないようです");
 		}
 		var emergencymode = false;
 		get("flip").onclick = function() {
@@ -373,9 +373,9 @@ var showItems = function(lat, lng) {
 			}
 			if (n == 0) {
 				if (emergencymode) {
-					alert("近く避難所オープンデータがないようです");
+					alert("近くに避難所オープンデータがないようです");
 				} else {
-					alert("近く観光オープンデータがないようです");
+					alert("近くに観光オープンデータがないようです");
 				}
 			}
 		};
@@ -386,6 +386,9 @@ var getImageLink = function(img) {
 		return null;
 	return "<a href=" + img + " target=_blank><img width=100% src=" + img + "></a>";
 };
+var getLink = function(label, url) {
+	return "<a href='" + url + "' target=_blank>" + label + "</a>";
+};
 var addItemSpot = function(d, lat, lng) {
 	var icon = null;
 	if (d.type == "http://purl.org/jrrk#EmergencyFacility")
@@ -395,7 +398,7 @@ var addItemSpot = function(d, lat, lng) {
 		getImageLink(d.img),
 		d.desc,
 		getHTMLMap(lat, lng, d.lat, d.lng),
-		getDataSrc(d.type),
+		getLink(getDataSrc(d.type), d.s),
 	], d.distance, icon);
 };
 
