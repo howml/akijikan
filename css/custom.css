@@ -18,15 +18,7 @@
 }
 .collapsible-header .days {
 	font-size: 2.1rem;
-}
-.collapsible-header i {
-    color:#00BFA5;
-    font-size: 5rem;
-    line-height: 8rem;
-    display: block;
-    float: right;
-    text-align: center;
-    margin-right: 3rem
+	white-space: nowrap;
 }
 .collapsible-body {
     display: none;
@@ -42,15 +34,30 @@
 	-webkit-box-shadow:0px 9px 12px -9px #383838 inset;
 }
 .icon {
+	position: absolute;
 	text-align: center;
 	line-height: 8rem;
 	display: block;
-	float: right;
-	margin-top: 2rem;
-	width: 5rem;
-	height: 5rem;
+	right: 0rem;
+	border: 2rem white solid;
+	margin-top: 0rem;
+	width: 9rem;
+	height: 9rem;
 	background-size: auto 100%;
 	background-position: center center;
+}
+.collapsible-header i {
+    color: #00BFA5;
+    font-size: 5rem;
+    line-height: 5rem;
+    display: block;
+	position: absolute;
+	right: -1rem;
+	background-color: white;
+	border: 2rem white solid;
+	width: 9rem;
+	height: 9rem;
+    text-align: center;
 }
 .distance {
 	display: block;

@@ -1,5 +1,5 @@
-//var defpos = [ 42.31804, 140.97418, "室蘭駅" ];
-var defpos = [ 42.108813, 140.573886, "森町駅" ];
+var defpos = [ 42.31804, 140.97418, "室蘭駅" ];
+//var defpos = [ 42.108813, 140.573886, "森町駅" ];
 //var defpos = [ 35.943406, 136.188597, "鯖江駅" ];
 var viewlen = 20;
 var maxlen = 30;
@@ -35,7 +35,7 @@ var dummy = [
 		desc: "駅近くの公園です",
 	},
 	{
-		name: "新日鉄",
+		name: "新日鉄の工場です、すごい夜景がきれいですよ！",
 		lat: 42.344137,
 		lng: 141.005935,
 		img: null,
@@ -369,7 +369,7 @@ var addItemSpot = function(d, lat, lng) {
 	var icon = null;
 	if (d.type == "http://purl.org/jrrk#EmergencyFacility")
 		icon = "warning";
-	return addItem(d.name.substring(0, 6), d.img, [
+	return addItem(d.name/*.substring(0, 6)*/, d.img, [
 		d.name,
 		getImageLink(d.img),
 		d.desc,
