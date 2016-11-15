@@ -126,26 +126,6 @@ var getHTMLMap = function(lat, lng, lat2, lng2) {
 	return "<a href='" + dir + "' target=_blank>" + img + "</a>";
 };
 
-var getCulturalPropertyWithGeo = function(size, callback) {
-	var q = f2s(function() {/*
-		prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-		select ?name ?desc ?url ?img ?lat ?lng {
-			?s <http://schema.org/image> ?img;
-				rdfs:label ?name;
-				geo:lat ?lat;
-				geo:long ?lng.
-			optional { ?s <http://schema.org/description> ?desc }
-			optional { ?s <http://schema.org/url> ?link }
-		} order by rand() limit $SIZE$
-	*/});
-	q = q.replace(/\$SIZE\$/g, size);
-	
-	var baseurl = "https://sparql.odp.jig.jp/data/sparql";
-	querySPARQL(baseurl, q, function(data) {
-		callback(toList(data));
-	});
-};
 var getDataSrc = function(type) {
 	if (type == "http://purl.org/jrrk#CivicPOI")
 		return "観光オープンデータ";
@@ -228,7 +208,7 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 		prefix schema: <http://schema.org/>
-		select ?s ?name ?desc ?link ?img ?lat ?lng ?type {
+		select ?s ?name ?desc ?descen ?link ?img ?lat ?lng ?type {
 			?s rdf:type ?type;
 				rdfs:label ?name;
 				geo:lat ?lat;
@@ -237,6 +217,10 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 			optional {
 				?s <http://schema.org/description> ?desc.
 				filter(lang(?desc)="$LANG$")
+			}
+			optional {
+				?s <http://schema.org/description> ?descen.
+				filter(lang(?descen)="en")
 			}
 			optional { ?s <http://schema.org/url> ?link }
 			$FILTER$
@@ -400,6 +384,7 @@ var addItemSpot = function(d, lat, lng) {
 		getLink(d.name + (d.link ? '<i class="material-icons">home</i>' : ""), d.link),
 		getImageLink(d.img),
 		d.desc,
+		d.descen,
 		getHTMLMap(lat, lng, d.lat, d.lng),
 		getLink(getDataSrc(d.type), d.s),
 	], d.distance, icon);
