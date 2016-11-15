@@ -402,11 +402,12 @@ $(function() {
 		ignoreGPS();
 		return;
 	}
-	load();
-	get("logo-container").onclick = load;
-};
-var load = function() {
-	clear("main");
+	
+	get("logo-container").onclick = loadItem;
+	loadItem();
+});
+var loadItem = function() {
+	clear("items");
 	addItem("付近のデータ取得中...", "noimage");
 	
 	if (navigator.geolocation) {
@@ -430,4 +431,4 @@ var load = function() {
 	} else {
 		ignoreGPS();
 	}
-});
+};
