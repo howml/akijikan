@@ -415,8 +415,10 @@ $(function() {
 	var hash = document.location.hash;
 	if (hash.length > 1) {
 		var pos = hash.substring(1).split(",");
-		showItems(pos[0], pos[1]);
-		return;
+		if (pos && pos.length == 2) {
+			showItems(pos[0], pos[1]);
+			return;
+		}
 	}
 	if (!gpson) {
 		ignoreGPS();
