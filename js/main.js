@@ -339,6 +339,7 @@ var showItems = function(lat, lng) {
 			alert("近くに観光オープンデータがないようです");
 		}
 		var emergencymode = false;
+		var emelink = null;
 		get("flip").onclick = function() {
 			emergencymode = !emergencymode;
 			var cs = get("items").children;
@@ -362,6 +363,20 @@ var showItems = function(lat, lng) {
 				} else {
 					alert("近くに観光オープンデータがないようです");
 				}
+			}
+			if (emergencymode) {
+				if (!emelink) {
+					var link = document.createElement("link");
+					link.rel = "stylesheet";
+					link.type = "text/css";
+					link.href = "css/emcustom.css";
+					document.getElementsByTagName("head")[0].appendChild(link);
+					emelink = link;
+				} else {
+					emelink.disabled = false;
+				}
+			} else {
+				emelink.disabled = true;
 			}
 		};
 	});
