@@ -1,0 +1,111 @@
+.collapsible{
+	box-shadow:none;
+}
+.collapsible {
+	border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    margin: 0.5rem 0 1rem 0;
+}
+.collapsible-header {
+    display: block;
+    cursor: pointer;
+	color:#EC6F75;
+    min-height: 8rem;
+    line-height: 8rem;
+    padding: 0 2rem 0 2rem;
+    border-bottom: 1px solid #ddd;
+	overflow: hidden;
+}
+.collapsible-header .days {
+	font-size: 2.1rem;
+	white-space: nowrap;
+}
+.collapsible-body {
+    display: none;
+    font-size: 1.2rem;
+	color:#fff;
+    background-color: #EC6F75;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 2rem 3rem 2rem 3rem;  
+	box-shadow:0px 9px 12px -9px #383838 inset;
+	-moz-box-shadow:0px 9px 12px -9px #383838 inset;
+	-webkit-box-shadow:0px 9px 12px -9px #383838 inset;
+}
+.collapsible-body i {
+	vertical-align: middle;
+	padding-bottom: 5px;
+}
+.icon {
+	position: absolute;
+	text-align: center;
+	line-height: 8rem;
+	display: block;
+	right: 0rem;
+	margin-top: 0rem;
+	background-color: white;
+	border-top: 2rem white solid;
+	border-left: 1rem white solid;
+	border-right: 1rem white solid;
+	border-bottom: 2rem white solid;
+	width: 7rem;
+	height: 9rem;
+	background-size: auto 100%;
+	background-position: center center;
+}
+.collapsible-header i {
+    color: #EC6F75;
+    font-size: 5rem;
+    line-height: 5rem;
+    display: block;
+	position: absolute;
+	right: -1rem;
+	background-color: white;
+	border-top: 2rem white solid;
+	border-left: 1rem white solid;
+	border-right: 1rem white solid;
+	border-bottom: 2rem white solid;
+	width: 7rem;
+	height: 9rem;
+    text-align: center;
+}
+.distance {
+	display: block;
+	position: relative;
+	line-height: 1rem;
+	font-size: 1rem;
+	top: -2.7rem;
+	left: 0.3rem;
+}
+.emergency_icon {
+	float: right;
+	height: 2.5rem;
+	margin-top: 1rem;
+}
+#splash {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	width: 100%;
+	height: 100%;
+	background: white;
+	top: 0px;
+	left: 0px;
+	opacity: 0.9;
+	text-align: center;
+}
+#splash h3 {
+	margin-top: 10rem;
+	padding: 1rem;
+}
+#items a {
+	color: white;
+}
+@media only screen and (min-width: 993px) {
+	.emergency_icon {
+	    margin-right: 12rem;
+		margin-top: 2.5rem;
+	}
+}
