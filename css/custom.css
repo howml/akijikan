@@ -52,7 +52,7 @@
 	border-bottom: 2rem white solid;
 	width: 7rem;
 	height: 9rem;
-	background-size: auto 100%;
+	background-size: auto 80%;
 	background-position: center center;
 }
 .collapsible-header i {
@@ -97,7 +97,7 @@
 }
 #splash #pc {
 	display: none;
-	margin-top: 2em;
+	margin-top: 0em;
 }
 #splash img {
 }
@@ -108,9 +108,9 @@
 #items a {
 	color: white;
 }
-@media only screen and (min-width: 692px) {
+@media only screen and (min-width: 666px) {
 	.emergency_icon {
-	    margin-right: 14rem;
+	    margin-right: 16rem;
 		margin-top: 3.2rem;
 	}
 	#splash #pc {
