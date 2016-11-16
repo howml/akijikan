@@ -1,5 +1,5 @@
-.collapsible{
-	box-shadow:none;
+.collapsible {
+	box-shadow: none;
 }
 .collapsible {
 	border-top: 1px solid #ddd;
@@ -103,7 +103,7 @@
 #items a {
 	color: white;
 }
-@media only screen and (min-width: 993px) {
+@media only screen and (min-width: 692px) {
 	.emergency_icon {
 	    margin-right: 12rem;
 		margin-top: 2.5rem;

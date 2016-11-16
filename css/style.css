@@ -41,7 +41,7 @@ nav {
     position: fixed
 }
 
-@media only screen and (max-width: 992px) {
+@media only screen and (max-width: 692px) {
     header, main, footer {
         padding-left: 0;
     }

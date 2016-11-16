@@ -1,5 +1,5 @@
-.collapsible{
-	box-shadow:none;
+.collapsible {
+	box-shadow: none;
 }
 .collapsible {
 	border-top: 1px solid #ddd;
@@ -82,7 +82,7 @@
 .emergency_icon {
 	float: right;
 	height: 2.5rem;
-	margin-top: 1rem;
+	margin-top: 0.8rem;
 }
 #splash {
 	display: none;
@@ -90,22 +90,33 @@
 	z-index: 1000;
 	width: 100%;
 	height: 100%;
-	background: white;
+	background-color: rgba(255, 255, 255, 0.9);
 	top: 0px;
 	left: 0px;
-	opacity: 0.9;
 	text-align: center;
+}
+#splash #pc {
+	display: none;
+	margin-top: 2em;
+}
+#splash img {
 }
 #splash h3 {
 	margin-top: 10rem;
-	padding: 1rem;
+	padding: 1rem 0 .5rem 0;
 }
 #items a {
 	color: white;
 }
-@media only screen and (min-width: 993px) {
+@media only screen and (min-width: 692px) {
 	.emergency_icon {
-	    margin-right: 12rem;
-		margin-top: 2.5rem;
+	    margin-right: 14rem;
+		margin-top: 3.2rem;
+	}
+	#splash #pc {
+		display: block;
+	}
+	#splash #mobile {
+		display: none;
 	}
 }
