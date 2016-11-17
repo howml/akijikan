@@ -7,6 +7,9 @@
     border-left: 1px solid #ddd;
     margin: 0.5rem 0 1rem 0;
 }
+.navbar-color{
+    background-color: #EC6F75;	
+} 
 .collapsible-header {
     display: block;
     cursor: pointer;
