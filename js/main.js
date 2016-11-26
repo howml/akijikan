@@ -172,18 +172,26 @@ var getNearTypesWithGeoMulti = function(types, lat, lng, dll, size, callback) {
 			return;
 		}
 //		alert("/10 " + d.length + "<" + size);
-		getNearTypesWithGeo(types, lat, lng, dll / 3, size * 2, function(d) {
+		getNearTypesWithGeo(types, lat, lng, dll / 3, size * 2, function(d2) {
+//			alert("/3-2 " + d2.length + "<" + size);
+			for (var i = 0; i < d2.length; i++)
+				d.push(d2[i]);
+//			alert("/3 " + d.length + "<" + size);
 			if (d.length >= size / 2) {
 				callback(d);
 				return;
 			}
 //			alert("/2 " + d.length + "<" + size);
-			getNearTypesWithGeo(types, lat, lng, dll, size * 2, function(d) {
+			getNearTypesWithGeo(types, lat, lng, dll, size * 2, function(d2) {
+				for (var i = 0; i < d2.length; i++)
+					d.push(d2[i]);
 				if (d.length > 0) {
 					callback(d);
 					return;
 				}
-				getNearTypesWithGeo(types, lat, lng, dll * 10, size, function(d) {
+				getNearTypesWithGeo(types, lat, lng, dll * 10, size, function(d2) {
+					for (var i = 0; i < d2.length; i++)
+						d.push(d2[i]);
 					if (d.length > 0) {
 						callback(d);
 						return;
@@ -208,7 +216,7 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 		prefix schema: <http://schema.org/>
-		select ?s ?name ?desc ?descen ?link ?img ?lat ?lng ?type {
+		select ?s ?name ?desc ?nameen ?descen ?link ?img ?lat ?lng ?type {
 			?s rdf:type ?type;
 				rdfs:label ?name;
 				geo:lat ?lat;
@@ -217,6 +225,10 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 			optional {
 				?s <http://schema.org/description> ?desc.
 				filter(lang(?desc)="$LANG$")
+			}
+			optional {
+				?s rdfs:label ?nameen.
+				filter(lang(?nameen)="en")
 			}
 			optional {
 				?s <http://schema.org/description> ?descen.
@@ -396,9 +408,10 @@ var addItemSpot = function(d, lat, lng) {
 	if (d.type == "http://purl.org/jrrk#EmergencyFacility")
 		icon = "warning";
 	return addItem(d.name/*.substring(0, 6)*/, d.img, [
-		getLink(d.name + (d.link ? '<i class="material-icons">home</i>' : ""), d.link),
+		"<b>" + getLink(d.name + (d.link ? '<i class="material-icons">home</i>' : ""), d.link) + "</b>",
 		getImageLink(d.img),
 		d.desc,
+		d.nameen ? ("<b>" + getLink(d.nameen + (d.link ? '<i class="material-icons">home</i>' : ""), d.link) + "</b>") : "",
 		d.descen,
 		getHTMLMap(lat, lng, d.lat, d.lng),
 		getLink(getDataSrc(d.type), d.s),
