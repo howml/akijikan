@@ -1,5 +1,6 @@
 ##AKIJIKAN
-アキジカン
+アキジカン  
+https://howml.github.io/akijikan/  
 
 ##スペシャルサンクス
 AKIJIKANは、[OGARUCO](http://ogaruco.net/)をベースに制作しました
