@@ -237,7 +237,7 @@ var getNearTypesWithGeo = function(types, lat, lng, dll, size, callback, order) 
 			optional { ?s <http://schema.org/url> ?link }
 			$FILTER$
 			filter(lang(?name)="$LANG$")
-			filter(xsd:float(?lat) < $LAT_MAX$ && xsd:float(?lat) > $LAT_MIN$ && xsd:float(?lng) < $LNG_MAX$ && xsd:float(?lng) > $LAT_MIN$)
+			filter(xsd:float(?lat) < $LAT_MAX$ && xsd:float(?lat) > $LAT_MIN$ && xsd:float(?lng) < $LNG_MAX$ && xsd:float(?lng) > $LNG_MIN$)
 		} $ORDER$ limit $SIZE$
 	*/});
 	/*
