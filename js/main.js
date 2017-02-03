@@ -52,8 +52,14 @@ var addItem = function(s, img, list, distance, icon) {
 	div.className = "collapsible-header";
 	li.appendChild(div);
 	
-	if (img && img != "noimage" && img.indexOf("https://") == -1) {
-		img = null;
+	if (img && img != "noimage" && img.indexOf("https://") == -1) { // 非ssl画像チェック
+//		alert(img);
+		img = "https://api.odp.jig.jp/image/cache_ssl?url=" + encodeURIComponent(img);
+//		alert(img);
+//		http://www.city.muroran.lg.jp/main/org1400/images/s-matsuri_251.jpg
+	/*
+		https://api.odp.jig.jp/image/cache_ssl?url=http://www.city.muroran.lg.jp/main/org1400/images/s-matsuri_241.jpg
+	*/
 	}
 	
 	if (img) {
