@@ -43,15 +43,7 @@ var dummy = [
 	},
 ];
 
-var addItem = function(s, img, list, distance, icon) {
-	/*
-	<li id="day0"><div class="collapsible-header"><span class="days"></span><span class="gcal"></span></div></li>
-	*/
-	var li = create("li");
-	var div = create("div");
-	div.className = "collapsible-header";
-	li.appendChild(div);
-	
+var proxyImageSSL = function(img) {
 	if (img && img != "noimage" && img.indexOf("https://") == -1) { // 非ssl画像チェック
 //		alert(img);
 		img = "https://api.odp.jig.jp/image/cache_ssl?url=" + encodeURIComponent(img);
@@ -61,6 +53,19 @@ var addItem = function(s, img, list, distance, icon) {
 		https://api.odp.jig.jp/image/cache_ssl?url=http://www.city.muroran.lg.jp/main/org1400/images/s-matsuri_241.jpg
 	*/
 	}
+	return img;
+};
+
+var addItem = function(s, img, list, distance, icon) {
+	/*
+	<li id="day0"><div class="collapsible-header"><span class="days"></span><span class="gcal"></span></div></li>
+	*/
+	var li = create("li");
+	var div = create("div");
+	div.className = "collapsible-header";
+	li.appendChild(div);
+	
+	img = proxyImageSSL(img);
 	
 	if (img) {
 		if (img != "noimage") {
@@ -402,6 +407,7 @@ var showItems = function(lat, lng) {
 var getImageLink = function(img) {
 	if (!img)
 		return null;
+	img = proxyImageSSL(img);
 	return "<a href=" + img + " target=_blank><img width=100% src=" + img + "></a>";
 };
 var getLink = function(label, url) {
