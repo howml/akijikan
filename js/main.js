@@ -153,7 +153,8 @@ var getNearWithGeo = function(lat, lng, size, callback) {
 	// http://purl.org/jrrk#EmergencyFacility
 	var typepoi = [
 		"http://purl.org/jrrk#CivicPOI",
-		"http://odp.jig.jp/odp/1.0#TourSpot"
+		"http://odp.jig.jp/odp/1.0#TourSpot",
+		"http://purl.org/jrrk#CulturalProperty", // 文化財
 	];
 	var typeemergency = [
 		"http://purl.org/jrrk#EmergencyFacility"
